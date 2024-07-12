@@ -13,18 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'PreloadPageView Demo',
-      home: VideoPlayerPage(videoUrls: [
-        "https://livepin-admin-bucket.s3.ap-south-1.amazonaws.com/1_ca40cdac88.mp4",
-        "https://livepin-admin-bucket.s3.ap-south-1.amazonaws.com/2_fb539354ab.mp4",
-        "https://livepin-admin-bucket.s3.ap-south-1.amazonaws.com/3_16e87df8eb.mp4",
-        "https://livepin-admin-bucket.s3.ap-south-1.amazonaws.com/4_15c308f235.mp4",
-        "https://livepin-admin-bucket.s3.ap-south-1.amazonaws.com/5_44db0041fe.mp4",
-        "https://livepin-admin-bucket.s3.ap-south-1.amazonaws.com/6_ca2732fb88.mp4",
-        "https://livepin-admin-bucket.s3.ap-south-1.amazonaws.com/7_ea250f7c42.mp4",
-        "https://livepin-admin-bucket.s3.ap-south-1.amazonaws.com/8_7bd778c5c2.mp4",
-        "https://livepin-admin-bucket.s3.ap-south-1.amazonaws.com/9_b1b13408f6.mp4",
-        "https://livepin-admin-bucket.s3.ap-south-1.amazonaws.com/10_f4db68d57a.mp4"
-      ]),
+      home: VideoPlayerPage(videoUrls: ["urls1"]),
     );
   }
 }
