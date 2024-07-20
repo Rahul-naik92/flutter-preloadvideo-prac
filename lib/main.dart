@@ -1,19 +1,19 @@
-import 'dart:async';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:learn_riverpod/feed_controller.dart';
+import 'package:provider/provider.dart';
 
 import 'package:video_player/video_player.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Wikolo',
       home: PlayerController(),
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
 }
 
 class PlayerController extends StatefulWidget {
-  const PlayerController({Key? key}) : super(key: key);
+  const PlayerController({super.key});
   @override
   State<PlayerController> createState() => _PlayerControllerState();
 }
@@ -64,9 +64,8 @@ class _PlayerControllerState extends State<PlayerController> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height,
+    return ChangeNotifierProvider(
+      create: (_) => FeedController(),
       child: PageView.builder(
         scrollDirection: Axis.vertical,
         itemCount: urls.length,
@@ -86,7 +85,7 @@ class _PlayerControllerState extends State<PlayerController> {
 class FeedItem extends StatefulWidget {
   // Url to play video
   final String url;
-  const FeedItem({Key? key, required this.url}) : super(key: key);
+  const FeedItem({super.key, required this.url});
 
   @override
   State<FeedItem> createState() => _FeedItemState();
@@ -96,45 +95,30 @@ class _FeedItemState extends State<FeedItem> {
   // Player controller
   late VideoPlayerController _controller;
 
+  bool initialized = false;
+
   @override
   void initState() {
     super.initState();
-    // Initialize player
     initializePlayer(widget.url);
   }
 
   // Initialize Video Player
   void initializePlayer(String url) async {
-    final fileInfo = await checkCacheFor(url);
-    if (fileInfo == null) {
-      _controller = VideoPlayerController.network(url);
-    } else {
-      _controller = VideoPlayerController.file(fileInfo.file);
-    }
+    _controller = await context.read<FeedController>().addController(url);
 
-    await _controller.initialize();
     if (mounted) {
       setState(() {
+        initialized = true;
         _controller.play();
       });
     }
   }
 
-  // Check for cache
-  Future<FileInfo?> checkCacheFor(String url) async {
-    final FileInfo? value = await DefaultCacheManager().getFileFromCache(url);
-    return value;
-  }
-
-  // Dispose controller
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
+    if (!initialized)
+      return const Center(child: CircularProgressIndicator.adaptive());
     return AspectRatio(
       aspectRatio: _controller.value.aspectRatio,
       child: VideoPlayer(_controller),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DemoPage extends StatelessWidget {
-  DemoPage(this.index);
+  const DemoPage(this.index, {super.key});
   final int index;
 
   @override
